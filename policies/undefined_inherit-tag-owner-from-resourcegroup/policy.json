@@ -1,0 +1,78 @@
+{
+ "properties": {
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "C:\\Development\\ADP\\infra\\PlatformEnvironment\\NestedTemplates\\Policy\\inherit-tag-owner-from-resourcegroup.json",
+  "metadata": {
+   "category": "General",
+   "createdBy": "e01a3ddd-5e7b-4208-be19-a5b1c067785d",
+   "createdOn": "2020-11-06T14:12:00.96974Z",
+   "updatedBy": "e01a3ddd-5e7b-4208-be19-a5b1c067785d",
+   "updatedOn": "2020-11-09T15:52:39.981528Z"
+  },
+  "parameters": {},
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "anyOf": [
+       {
+        "notEquals": "[resourcegroup().tags['Owner']]",
+        "field": "tags['Owner']"
+       },
+       {
+        "exists": false,
+        "field": "tags['Owner']"
+       }
+      ]
+     },
+     {
+      "notin": [
+       "Microsoft.Resources/subscriptions/resourceGroups",
+       "microsoft.alertsmanagement/smartdetectoralertrules",
+       "Microsoft.Compute/virtualMachineScaleSets/extensions",
+       "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/extensions",
+       "microsoft.insights/metricAlerts",
+       "Microsoft.Logic/integrationServiceEnvironments/managedApis",
+       "microsoft.operationsmanagement/solutions",
+       "Microsoft.OperationsManagement/solutions",
+       "Microsoft.Network/firewallPolicies",
+       "Microsoft.Network/networkWatchers",
+       "microsoft.network/ipgroups",
+       "Microsoft.Network/ipGroups",
+       "Microsoft.Web/connections",
+       "microsoft.authorization/locks"
+      ],
+      "field": "type"
+     },
+     {
+      "notContains": "Microsoft.Network/dnszones",
+      "field": "type"
+     },
+     {
+      "notContains": "microsoft.apimanagement/service/",
+      "field": "type"
+     }
+    ]
+   },
+   "then": {
+    "details": {
+     "operations": [
+      {
+       "field": "tags['Owner']",
+       "operation": "addOrReplace",
+       "value": "[resourcegroup().tags['Owner']]"
+      }
+     ],
+     "roleDefinitionIds": [
+      "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+     ]
+    },
+    "effect": "modify"
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/adp/providers/Microsoft.Authorization/policyDefinitions/inherit-tag-owner-from-resourcegroup",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "inherit-tag-owner-from-resourcegroup"
+}
